@@ -1,0 +1,46 @@
+body {
+  background-color: rgb(155, 155, 155);
+}
+.container {
+  width: 600px;
+  min-height: 200px;
+  margin: 20px auto;
+  padding: 15px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px;
+}
+
+.head {
+  width: 570px;
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.flash {
+  background-color: rgb(246, 85, 85);
+  height: 30px;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.form {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.form p {
+  margin-bottom: 5px;
+}
+
+.links {
+  padding: 10px;
+  text-align: center;
+}
+
+.links .buttons {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-around;
+}

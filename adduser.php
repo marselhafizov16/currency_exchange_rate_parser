@@ -1,12 +1,11 @@
 <?php
 session_start();
 error_reporting(-1);
-
-require_once "db/db.php";   // Подключаем файл подключения к БД
-require_once "classes/Registration.php";  // Подключаем класс, проверяющий данные авторизации
+spl_autoload_register();
+require_once "config/db.php";   // Подключаем файл подключения к БД
 
 if (isset($_POST['reg'])) {  // Проверяем, была ли нажата кнопка отправки формы
-    $registration = new Registration($_POST['name'], $_POST['phone'], $_POST['mail'], $_POST['password1'], $_POST['password2']);  // Отправляем данные на обработку
+    $registration = new classes\Registration($_POST['name'], $_POST['phone'], $_POST['mail'], $_POST['password1'], $_POST['password2']);  // Отправляем данные на обработку
     $registration->check($link);
     header("Location: adduser.php");
     die;
@@ -19,14 +18,17 @@ if (isset($_POST['reg'])) {  // Проверяем, была ли нажата �
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/reset.css">
+    <link rel="stylesheet" type="text/css" href="css/stylereg.css">
     <title>Регистрация</title>
 </head>
 <body>
 <?php if(empty($_SESSION['name'])) : ?>  <!-- Пока пользователь не зарегестрировался, показываем форму -->
     <div class="container">
-        <head>
+        <div class="head">
             <h1>Регистрация</h1>
-        </head>
+        </div>
+        <hr>
         <div class="flash">
             <?php 
                 if (isset($_SESSION["success"])) {  // Выводим предупреждения
@@ -54,11 +56,11 @@ if (isset($_POST['reg'])) {  // Проверяем, была ли нажата �
                 <p><input type="submit" name="reg" value="Зарегистрироваться"></p>
             </form>
         </div>
-        <div class="link">
+        <hr>
+        <div class="links">
             <h3>Если вы уже зарегистрированы, вы можете просто авторизоваться:</h3>
             <button><a href="index.php">Авторизоваться</a></button>
         </div>
-        <footer></footer>
     </div>
 <?php else : ?>  <!-- Если зарегестрировался, перенаправляем на страницу профиля -->
     <?php

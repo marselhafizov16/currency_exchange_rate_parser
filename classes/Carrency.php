@@ -11,7 +11,7 @@ class Carrency
     private $url = "https://cbr.ru/curreNcy_base/daily/";   // Url с курсом валют.
 
     //Метод парсинга курса валют и сохранения/обновления данных в БД.
-    public function getCarrency($link) 
+    public function getCurrency($link) 
     {
         // С помощью парсера получаем элементы с курсами валют из заданного url.
         $document = new Document($this->url, true);  
@@ -34,10 +34,69 @@ class Carrency
                 $insurt = mysqli_query($link, "INSERT INTO `currencies` VALUES (NULL,'$subarray[1]','$subarray[2]','$subarray[3]','$rare')");
             }
         } else {
-            foreach ($chunkArray as $subarray) {
-                $rare = (float)str_replace(",",".", $subarray[4]);
-                $insurt = mysqli_query($link, "UPDATE `currencies` SET `rate`='$rare'");
-            }
+                $count = $resultSelect[0][0];
+                foreach ($chunkArray as $subarray) {
+                    $rate = (float)str_replace(",",".", $subarray[4]); 
+                    $insurt = mysqli_query($link, "UPDATE `currencies` SET `rate`='$rate' WHERE id='$count'");
+                    $count += 1;
+                }
         }    
+    }
+
+
+    // Метод извлекаетвалюту для первичного вывода
+    public function getFirstCurrency($link) 
+    {
+        $select1 = mysqli_query($link, "SELECT * FROM `currencies` WHERE code='USD'");
+        $select2 = mysqli_query($link, "SELECT `code`, `currency` FROM `currencies`");
+        $cod = mysqli_fetch_all($select1);
+        $cc = mysqli_fetch_all($select2);
+        $_SESSION['cod'] = $cod;
+        $_SESSION['cc'] = $cc;
+        $_SESSION['turn'] = 'first';
+    }
+
+
+    // Метод извлекает и передает выбранную валюту
+    public function getChoiceCurrency($link, $currency)
+    {
+        $select1 = mysqli_query($link, "SELECT * FROM `currencies` WHERE code='$currency'");
+        $cod = mysqli_fetch_all($select1);
+        $_SESSION['cod'] = $cod;
+    }
+
+
+    // Метод конвертирует валюту
+    public function convert($link, $amount, $cod)
+    {
+        if ($amount < 0) {
+            $_SESSION['flesh'] = "Значение должно быть положительным";
+            return false;
+        }
+
+        $select1 = mysqli_query($link, "SELECT * FROM `currencies` WHERE code='$cod'");
+        $rescod = mysqli_fetch_all($select1);
+
+        $result = ((float)$rescod[0][4] * (float)$amount) / $rescod[0][2];
+        $_SESSION['resultconvert'] = $result;
+        $_SESSION['count'] = $amount;
+        $_SESSION['cod'] = $rescod;
+    }
+
+
+    public function oppositeConvert($link, $amount, $cod)
+    {
+        if ($amount < 0) {
+            $_SESSION['flesh'] = "Значение должно быть положительным";
+            return false;
+        }
+
+        $select1 = mysqli_query($link, "SELECT * FROM `currencies` WHERE code='$cod'");
+        $rescod = mysqli_fetch_all($select1);
+
+        $result = (float)$rescod[0][2] / ((float)$amount * $rescod[0][4]);
+        $_SESSION['resultconvert'] = $result;
+        $_SESSION['count'] = $amount;
+        $_SESSION['cod'] = $rescod;
     }
 }

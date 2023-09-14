@@ -53,7 +53,6 @@ class Carrency
         $cc = mysqli_fetch_all($select2);
         $_SESSION['cod'] = $cod;
         $_SESSION['cc'] = $cc;
-        $_SESSION['turn'] = 'first';
     }
 
 
@@ -67,36 +66,36 @@ class Carrency
 
 
     // Метод конвертирует валюту
-    public function convert($link, $amount, $cod)
+    public function convert($link, $from, $to, $amount)
     {
         if ($amount < 0) {
             $_SESSION['flesh'] = "Значение должно быть положительным";
             return false;
         }
 
-        $select1 = mysqli_query($link, "SELECT * FROM `currencies` WHERE code='$cod'");
-        $rescod = mysqli_fetch_all($select1);
+        if ($from == $to) {
+            $_SESSION['flesh'] = "{$amount} {$from} = {$amount} {$to}";
+        }
+        // var_dump($from, $to, $amount);
 
-        $result = ((float)$rescod[0][4] * (float)$amount) / $rescod[0][2];
-        $_SESSION['resultconvert'] = $result;
-        $_SESSION['count'] = $amount;
-        $_SESSION['cod'] = $rescod;
-    }
-
-
-    public function oppositeConvert($link, $amount, $cod)
-    {
-        if ($amount < 0) {
-            $_SESSION['flesh'] = "Значение должно быть положительным";
-            return false;
+        if ($from !== "RUB") {
+            $select1 = mysqli_query($link, "SELECT * FROM `currencies` WHERE code='$from'");
+            $rescod = mysqli_fetch_all($select1);
+            $result = ((float)$rescod[0][4] * (float)$amount) / $rescod[0][2];
+            $_SESSION['flesh'] = "{$amount} {$from} = {$result} {$to}";
+            // $_SESSION['resultconvert'] = $result;
+            // $_SESSION['count'] = $amount;
+            $_SESSION['cod'] = $rescod;
         }
 
-        $select1 = mysqli_query($link, "SELECT * FROM `currencies` WHERE code='$cod'");
-        $rescod = mysqli_fetch_all($select1);
-
-        $result = (float)$rescod[0][2] / ((float)$amount * $rescod[0][4]);
-        $_SESSION['resultconvert'] = $result;
-        $_SESSION['count'] = $amount;
-        $_SESSION['cod'] = $rescod;
+        if ($from == "RUB") {
+            $select1 = mysqli_query($link, "SELECT * FROM `currencies` WHERE code='$to'");
+            $rescod = mysqli_fetch_all($select1);
+            $result = (float)$amount / ((float)$rescod[0][4] * $rescod[0][2]);
+            $_SESSION['flesh'] = "{$amount} {$from} = {$result} {$to}";
+            // $_SESSION['resultconvert'] = $result;
+            // $_SESSION['count'] = $amount;
+            $_SESSION['cod'] = $rescod;
+        }
     }
 }

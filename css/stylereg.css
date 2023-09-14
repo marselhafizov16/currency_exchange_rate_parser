@@ -17,14 +17,6 @@ body {
   margin-bottom: 10px;
 }
 
-.flash {
-  background-color: rgb(246, 85, 85);
-  height: 30px;
-  border-radius: 5px;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
 .form {
   padding: 10px;
   margin-bottom: 10px;

@@ -95,7 +95,7 @@ class Carrency
         if ($from == "RUB") {
             $select1 = mysqli_query($link, "SELECT * FROM `currencies` WHERE code='$to'");
             $rescod = mysqli_fetch_all($select1);
-            $result = (float)$amount / ((float)$rescod[0][4] * $rescod[0][2]);
+            $result = (float)$amount / (float)$rescod[0][4] * $rescod[0][2];
             $_SESSION['flesh'] = "{$amount} {$from} = {$result} {$to}";
             // $_SESSION['resultconvert'] = $result;
             // $_SESSION['count'] = $amount;

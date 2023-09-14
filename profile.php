@@ -4,7 +4,6 @@ error_reporting(-1);
 spl_autoload_register();    // Подключение классов.
 require_once "config/db.php"; // Подключение БД.
 
-
 // Если куки не существует, то задаем на 3 часа и создаем объект и обращаемся к методу, который получает курс валют и сохраняет их в БД.
 if (!isset($_COOKIE['threeHours'])) {  
     $class = new classes\Carrency;
@@ -31,10 +30,9 @@ if (isset($_GET['choosecurrency'])){
 // Конвертация в RUB
 if (isset($_GET['convert'])) {
     $convert = new classes\Carrency;
-    $convert->convert($link, $_GET['from'], $_GET['to'], $_GET['amount']);
+    $convert->convert($link, $_GET['from'], $_GET['to'], $_GET['amount'], $_GET['cod']);
     $cod = $_SESSION['cod'][0];
 }
-
 
 // Если пользовтель нажал кнопку "Выйти из аккаунта", удаляем сессию, куки и возвращаемся на старницу авторизации.
 if (isset($_GET['do']) && $_GET['do'] == 'exit') { 
@@ -68,19 +66,15 @@ if (isset($_GET['do']) && $_GET['do'] == 'exit') {
         </div>
         <div class="profil">   <!-- Данные пользователя. -->
             <div class="date">
-                <h3>Личные данные</h3>
+                <h6>Личные данные</h6>
                 <p>Имя: <?php echo $_SESSION['name'] ?></p>
                 <p>Телефон: <?php echo $_SESSION['phone'] ?></p>
                 <p>E-mail: <?php echo $_SESSION['email'] ?></p>
             </div>
         </div>
-        <hr>
         <div class="currency">   <!-- Конвертер валют. -->
-            <h1>Конвертер курса валют</h1>
-            <div class="document">
+            <h6>Конвертер курса валют</h6>
                 <div class="choosecurrency">    <!-- Форма выбора валюты. -->
-                <?php
-                // var_dump($cod);?>
                     <form action="" method="get">
                         <select name="currency">
                             <?php
@@ -97,47 +91,40 @@ if (isset($_GET['do']) && $_GET['do'] == 'exit') {
                     </form>
                 </div>
                 <div class="viewcurrency">   <!-- Вывод курса выбранной валюты и конвертация. -->
-                    <?php 
-                    echo "Курс на данный момент: " .  $cod[2] . " " .  $cod[1] . " = " . $cod[4] . " RUB";
-                    ?>
-                    <form action="" method="get">
-                        <?php echo "Конвертировать из "?>
-                        <select name="from">
-                            <?php
+                    <div class="veiw">
+                        <?php echo "<p>Курс на данный момент: " .  $cod[2] . " " .  $cod[1] . " = " . $cod[4] . " RUB</p>";?>
+                    </div>
+                    <div class="work">
+                        <form action="" method="get">
+                            <?php echo "Конвертировать из "?>
+                            <select name="from">
+                                <?php
                                 echo "<option value='$cod[1]' selected>{$cod[1]}</option>";
                                 echo "<option value='RUB'>RUB</option>";
-                            ?>
-                        </select>
-                        <?php 
-                        echo "<input type='number' name='amount' value='1'>";
-                        echo "в";
-                        ?>
-                        <select name="to">
-                            <?php
+                                ?>
+                            </select>
+                            <?php echo "<input type='number' name='amount' value='1'> в ";?>
+                            <select name="to">
+                                <?php
                                 echo "<option value='$cod[1]' selected>{$cod[1]}</option>";
                                 echo "<option value='RUB' selected>RUB</option>";
-                            ?>
-                        </select>
-                        <?php      
-                            echo "<input type='submit' name='convert' value='Конвертировать'>";
-                        ?>
-                    </form>
-                    <div class="convertresult">
+                                ?>
+                            </select>
+                            <?php echo 
+                            "<input type='hidden' name='cod' value='$cod[1]'>" .
+                            "<input type='submit' name='convert' value='Конвертировать'>";?>
+                        </form>
+                    </div>
+                    <div class="convertresult">    <!-- Вывод результата конвертации. -->
                         <?php 
-                            if (isset($_SESSION["flesh"])) {
-                            echo $_SESSION["flesh"];
-                            unset($_SESSION["flesh"]);
-                            }
-
-                            // if (isset($result) && isset($count)) {
-                            //     echo "<p>$count $cod[1] =  $result RUB</p>";
-                            // }
+                        if (isset($_SESSION["flesh"])) {
+                        echo $_SESSION["flesh"];
+                        unset($_SESSION["flesh"]);
+                        }
                         ?>
                     </div>
                 </div>
-            </div>
         </div>
-        <hr>
         <div class="links">  <!-- Выход из аккаунта. -->
             <button><a href="?do=exit" style="text-decoration:none;">Выйти из аккаунта</a></button>
         </div>

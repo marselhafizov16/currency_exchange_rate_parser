@@ -34,12 +34,12 @@ class Carrency
                 $insurt = mysqli_query($link, "INSERT INTO `currencies` VALUES (NULL,'$subarray[1]','$subarray[2]','$subarray[3]','$rare')");
             }
         } else {
-                $count = $resultSelect[0][0];
-                foreach ($chunkArray as $subarray) {
-                    $rate = (float)str_replace(",",".", $subarray[4]); 
-                    $insurt = mysqli_query($link, "UPDATE `currencies` SET `rate`='$rate' WHERE id='$count'");
-                    $count += 1;
-                }
+            $count = $resultSelect[0][0];
+            foreach ($chunkArray as $subarray) {
+                $rate = (float)str_replace(",",".", $subarray[4]); 
+                $insurt = mysqli_query($link, "UPDATE `currencies` SET `rate`='$rate' WHERE id='$count'");
+                $count += 1;
+            }
         }    
     }
 
@@ -66,7 +66,7 @@ class Carrency
 
 
     // Метод конвертирует валюту
-    public function convert($link, $from, $to, $amount)
+    public function convert($link, $from, $to, $amount, $cod)
     {
         if ($amount < 0) {
             $_SESSION['flesh'] = "Значение должно быть положительным";
@@ -74,7 +74,11 @@ class Carrency
         }
 
         if ($from == $to) {
+            $select1 = mysqli_query($link, "SELECT * FROM `currencies` WHERE code='$cod'");
+            $rescod = mysqli_fetch_all($select1);
+            $_SESSION['cod'] = $rescod;
             $_SESSION['flesh'] = "{$amount} {$from} = {$amount} {$to}";
+            return false;
         }
         // var_dump($from, $to, $amount);
 

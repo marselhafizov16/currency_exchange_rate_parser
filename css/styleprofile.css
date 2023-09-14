@@ -1,0 +1,60 @@
+body {
+  background-color: rgb(155, 155, 155);
+}
+.container {
+  width: 600px;
+  min-height: 200px;
+  margin: 20px auto;
+  padding: 15px;
+}
+
+.profil {
+  padding: 5px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px;
+  margin-bottom: 25px;
+}
+
+.currency {
+  padding: 5px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+}
+
+.currency .choosecurrency {
+  margin-bottom: 10px;
+}
+
+.currency .choosecurrency {
+  margin-bottom: 10px;
+}
+
+.currency .viewcurrency .work {
+  margin-bottom: 5px;
+}
+
+.currency .viewcurrency .veiw,
+.currency .viewcurrency .convertresult {
+  background-color: rgb(249, 185, 108);
+  border-radius: 5px;
+  padding: 3px;
+  margin-bottom: 10px;
+}
+
+.links {
+  margin: 0 auto;
+  width: 500px;
+  padding: 5px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+h6 {
+  font-weight: bold;
+}
